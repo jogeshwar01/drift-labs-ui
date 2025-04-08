@@ -17,29 +17,25 @@ function ConnectWalletButton() {
   };
 
   return (
-    <div className="relative flex gap-4 border-l border-border pr-8 font-mono text-sm w-[80%] max-w-xs">
-      <div className="grid w-full">
-        <div className="flex w-full items-center justify-between">
-          {publicKey ? (
-            <div className="flex items-center">
-              <button
-                onClick={handleDisconnect}
-                className="cursor-pointer text-md min-w-[90%] inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring bg-primary text-background shadow hover:bg-primary/90 px-4 py-0 ml-6 h-11 w-full rounded-none font-mono font-normal uppercase tracking-wider text-base"
-              >
-                <img src="/favicon.svg" alt="Wallet" className="w-4 h-4 mr-2" />
-                {publicKey.toBase58().substring(0, 24) + "..."}
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={handleClick}
-              className="cursor-pointer text-md inline-flex min-w-[90%] items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring bg-primary text-background shadow hover:bg-primary/90 px-4 py-0 ml-6 h-11 w-full rounded-none font-mono font-normal uppercase tracking-wider text-base"
-            >
-              CONNECT YOUR WALLET
-            </button>
-          )}
-        </div>
-      </div>
+    <div id="wallet_button" className="items-center h-full">
+      {publicKey ? (
+        <button
+          onClick={handleDisconnect}
+          className="space-x-2 cursor-pointer disabled:cursor-not-allowed disabled:bg-button-disabled disabled:hover:bg-button-disabled disabled:text-text-disabled inline-flex rounded-xs font-display items-center justify-center transition-all h-[32px] py-[8px] px-[12px] bg-[image:var(--color-primary-gradient)] text-text-gradient-button text-xs md:text-md whitespace-nowrap"
+        >
+          <img src="/favicon.svg" alt="Wallet" className="w-4 h-4 mr-2" />
+          <span>
+            {publicKey.toBase58().substring(0, 6) + "..."}
+          </span>
+        </button>
+      ) : (
+        <button
+          onClick={handleClick}
+          className="space-x-2 cursor-pointer disabled:cursor-not-allowed disabled:bg-button-disabled disabled:hover:bg-button-disabled disabled:text-text-disabled inline-flex rounded-sm font-display items-center justify-center transition-all h-[32px] py-[8px] px-[12px] bg-[image:var(--color-primary-gradient)] text-text-gradient-button text-xs md:text-md whitespace-nowrap"
+        >
+          <span>Connect</span>
+        </button>
+      )}
       <div className="hidden">
         <WalletMultiButton />
       </div>

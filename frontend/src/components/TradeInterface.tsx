@@ -6,10 +6,16 @@ function TradeInterface({ market }: { market: string }) {
   return (
     <div className="flex flex-col">
       <div className="flex flex-1">
-        <TradeView market={market as string} />
-        <Depth market={market as string} />
+        <div style={{ gridArea: "1 / 1 / 2 / 2" }} className="max-w-[682px]">
+          <TradeView market={market as string} />
+        </div>
+        <div style={{ gridArea: "1 / 2 / 2 / 3" }}>
+          <Depth market={market as string} />
+        </div>
       </div>
-      <OrdersMenu />
+      <div style={{ gridArea: "2 / 1 / 3 / 3" }}>
+        <OrdersMenu />
+      </div>
     </div>
   );
 }
