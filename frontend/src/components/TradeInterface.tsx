@@ -4,16 +4,16 @@ import { TradeView } from "./trade/TradeView";
 
 function TradeInterface({ market }: { market: string }) {
   return (
-    <div className="flex flex-col">
-      <div className="flex flex-1">
-        <div style={{ gridArea: "1 / 1 / 2 / 2" }} className="max-w-[682px]">
+    <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-4 gap-2">
+        <div className="col-span-3">
           <TradeView market={market as string} />
         </div>
-        <div style={{ gridArea: "1 / 2 / 2 / 3" }}>
+        <div className="col-span-1">
           <Depth market={market as string} />
         </div>
       </div>
-      <div style={{ gridArea: "2 / 1 / 3 / 3" }}>
+      <div>
         <OrdersMenu />
       </div>
     </div>

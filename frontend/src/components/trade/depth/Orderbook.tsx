@@ -1,20 +1,12 @@
-import { useContext, useEffect, useRef, useState, useMemo } from "react";
+import { useContext, useEffect, useState, useMemo } from "react";
 import { TradesContext } from "../../../state/TradesProvider";
+import { OrderbookIcon } from "../../icons/OrderbookIcon";
+import { ChevronIcon } from "../../icons/ChevronIcon";
 
-interface OrderBookProps {
-  valueSymbol: string;
-}
+export const OrderBook = () => {
+  const { bids, asks, totalBidSize, totalAskSize } = useContext(TradesContext);
 
-export const OrderBook = ({ valueSymbol }: OrderBookProps) => {
-  const { ticker, bids, asks, totalBidSize, totalAskSize } =
-    useContext(TradesContext);
-
-  const bidsRef = useRef<HTMLDivElement | null>(null);
-  const asksRef = useRef<HTMLDivElement | null>(null);
-
-  const [spread, setSpread] = useState<number>(0);
   const [spreadPercentage, setSpreadPercentage] = useState<number>(0);
-  const [flashBidsAsk, setFlashBidsAsks] = useState<boolean>(false);
 
   const calculateCumulativeWidth = (
     cumulativeSize: number,
@@ -34,161 +26,174 @@ export const OrderBook = ({ valueSymbol }: OrderBookProps) => {
   useEffect(() => {
     if (highestBid && lowestAsk) {
       const newSpread = lowestAsk - highestBid;
-      setSpread(newSpread);
       setSpreadPercentage(
         newSpread && highestBid ? (newSpread / highestBid) * 100 : 0
       );
     } else {
-      setSpread(0);
       setSpreadPercentage(0);
     }
   }, [highestBid, lowestAsk]);
 
-  // Detect changes in bids or asks to trigger flash effect
-  useEffect(() => {
-    setFlashBidsAsks(true);
-    const timeout = setTimeout(() => setFlashBidsAsks(false), 100); // Flash for 200ms
-    return () => clearTimeout(timeout);
-  }, [asks, bids]);
+  // Display logic - centered around the spread
+  const ordersToShow = 10; // Show 10 orders on each side
+
+  // Process asks and bids for display
+  const processedAsks = asks?.slice(0, ordersToShow) || [];
+  const processedBids = bids?.slice(0, ordersToShow) || [];
 
   // Cumulative calculation for bids and asks
   let cumulativeBidSize = 0;
   let cumulativeAskSize = 0;
 
   return (
-    <div className="h-full">
-      {/* Order Book */}
-      <div className="relative h-full bg-background">
-        <div className="flex flex-col h-full text-white fadein-floating-element bg-background xs:min-h-[25vh] md:min-h-0">
-          <div className="flex justify-between text-xs px-2 py-1 text-vestgrey-100">
-            <div className="font-[300] text-[12px] text-center">Price</div>
-            <div className="font-[300] text-[12px] ml-8">
-              Size ({ticker?.symbol?.split("-")?.[0]})
-            </div>
-            <div className="font-[300] text-[12px] text-left">
-              Total ({ticker?.symbol?.split("-")?.[0]})
-            </div>
+    <div className="h-full flex flex-col">
+      <div className="flex justify-between text-xs px-2 py-1 text-text-tertiary">
+        <span className="font-[300] text-[12px] leading-[14px] tracking-[0.15px] text-center">
+          Price
+        </span>
+        <span className="font-[300] text-[12px] leading-[14px] tracking-[0.15px] text-left">
+          Size
+        </span>
+      </div>
+
+      <div className="flex-grow flex flex-col relative">
+        <div className="absolute inset-0 w-full h-full overflow-auto thin-scroll flex flex-col">
+          {/* Asks (sell orders) */}
+          <div data-puppet-tag="sell" className="flex flex-col-reverse w-full">
+            {processedAsks.map((order, index) => {
+              const size = parseFloat(order[1]);
+              cumulativeAskSize += size;
+
+              return (
+                <div key={index} className="relative w-full mb-[1px]">
+                  <div className="w-full h-6 flex relative box-border text-xs leading-7 justify-between font-display mr-0">
+                    <div className="flex flex-row mx-2 justify-between w-full">
+                      <div className="z-10 hover:brightness-125 hover:cursor-pointer text-xs leading-6 text-text-negative-red-button">
+                        {parseFloat(order[0]).toFixed(4)}
+                      </div>
+                      <div className="z-10 text-xs leading-6 text-static-default hover:brightness-125 hover:cursor-pointer items-center inline-flex">
+                        {parseFloat(order[1]).toFixed(2)}
+                      </div>
+                    </div>
+                    <div className="absolute opacity-20 w-full h-full flex justify-start">
+                      <div
+                        className="bg-negative-red brightness-100 h-full"
+                        style={{
+                          width: calculateCumulativeWidth(
+                            cumulativeAskSize,
+                            totalAskSize
+                          ),
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
-          <div className="flex-1 flex flex-col relative overflow-hidden">
-            {/* Asks Scrollable Area (now at top and green) */}
-            <div
-              ref={asksRef}
-              className="flex-1 overflow-y-auto flex flex-col-reverse"
-              style={{
-                scrollBehavior: "smooth",
-                scrollbarWidth: "none",
-                msOverflowStyle: "none",
-              }}
-            >
-              {asks?.slice(0, 10)?.map((order, index) => {
-                const size = parseFloat(order[1]);
-                cumulativeAskSize += size; // Keep track of cumulative size
+          {/* Spread indicator */}
+          <div className="w-full px-2 inline-flex justify-between items-center py-1 min-h-[26px] space-x-2 bg-container-bg-hover hover:cursor-pointer text-text-default">
+            <div className="flex items-center space-x-2">
+              <div className="outline-none focus:outline-none flex">
+                <div className="flex flex-col">
+                  <span className="font-[300] text-[13px] leading-[16px] text-text-emphasis">
+                    {lowestAsk.toFixed(4)}
+                  </span>
+                </div>
+              </div>
+              <div className="outline-none focus:outline-none flex">
+                <div className="flex flex-col">
+                  <span className="font-[300] text-[12px] leading-[14px] tracking-[0.15px] text-text-label">
+                    {highestBid.toFixed(4)}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* Bids (buy orders) */}
+          <div data-puppet-tag="buy" className="flex flex-col w-full">
+            {processedBids.map((order, index) => {
+              const size = parseFloat(order[1]);
+              cumulativeBidSize += size;
 
-                return (
-                  <div key={index} className="relative w-full my-[2px]">
-                    <div className="w-full h-5 flex items-center relative box-border text-xs leading-7 justify-between font-display mr-0">
-                      <div className="flex flex-row mx-2 justify-between font-mono w-full">
-                        <div className="z-10 text-xs leading-6 text-green">
-                          {parseFloat(order[0]).toFixed(3)}
-                        </div>
-                        <div className="z-10 text-xs leading-6 text-white">
-                          {valueSymbol !== "USDC"
-                            ? order[1]
-                            : (
-                                parseFloat(order[1]) * parseFloat(order[0])
-                              ).toFixed(3)}
-                        </div>
-                        <div className="z-10 text-xs leading-6 text-white">
-                          {cumulativeAskSize.toFixed(3)}
-                        </div>
+              return (
+                <div key={index} className="relative w-full mb-[1px]">
+                  <div className="w-full h-6 flex relative box-border text-xs leading-7 justify-between font-display ml-0">
+                    <div className="flex flex-row mx-2 justify-between w-full">
+                      <div className="z-10 hover:brightness-125 hover:cursor-pointer text-xs leading-6 text-text-positive-green-button">
+                        {parseFloat(order[0]).toFixed(4)}
                       </div>
-                      {/* Cumulative background */}
-                      <div className="absolute opacity-10 w-full h-full flex justify-start">
-                        <div
-                          className={`h-full brightness-80 ${
-                            flashBidsAsk ? "bg-green-200" : "bg-green"
-                          }`}
-                          style={{
-                            width: calculateCumulativeWidth(
-                              cumulativeAskSize,
-                              totalAskSize
-                            ),
-                            transition: "width 0.3s ease-in-out",
-                          }}
-                        ></div>
+                      <div className="z-10 text-xs leading-6 text-static-default hover:brightness-125 hover:cursor-pointer items-center inline-flex">
+                        {parseFloat(order[1]).toFixed(2)}
                       </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Orderbook Spread */}
-            <div className="relative w-full px-2 inline-flex font-mono justify-center gap-4 items-center py-1 min-h-[26px] bg-vestgrey-800 text-white z-20">
-              <div className="font-[300] text-[13px] leading-[16px] text-white">
-                Spread
-              </div>
-              <div className="text-xs">
-                {spread > 0 ? `${spread.toFixed(4)}` : "-"}
-              </div>
-              <div className="text-xs">
-                {spread > 0 && `${spreadPercentage.toFixed(1)}%`}
-              </div>
-            </div>
-
-            {/* Bids Scrollable Area (now at bottom and red) */}
-            <div
-              ref={bidsRef}
-              className="flex-1 overflow-y-auto flex flex-col"
-              style={{
-                scrollBehavior: "smooth",
-                scrollbarWidth: "none",
-                msOverflowStyle: "none",
-              }}
-            >
-              {bids?.slice(0, 10)?.map((order, index) => {
-                const size = parseFloat(order[1]);
-                cumulativeBidSize += size; // Keep track of cumulative size
-
-                return (
-                  <div key={index} className="relative w-full my-[2px]">
-                    <div className="w-full h-5 flex items-center relative box-border text-xs leading-7 justify-between font-display ml-0">
-                      <div className="flex flex-row mx-2 justify-between font-mono w-full">
-                        <div className="z-10 text-xs leading-6 text-red">
-                          {parseFloat(order[0]).toFixed(3)}
-                        </div>
-                        <div className="z-10 text-xs leading-6 text-white">
-                          {valueSymbol !== "USDC"
-                            ? order[1]
-                            : (
-                                parseFloat(order[1]) * parseFloat(order[0])
-                              ).toFixed(3)}
-                        </div>
-                        <div className="z-10 text-xs leading-6 text-white">
-                          {cumulativeBidSize.toFixed(3)}
-                        </div>
-                      </div>
-                      {/* Cumulative background */}
-                      <div className="absolute opacity-10 w-full h-full flex justify-start">
-                        <div
-                          className={`h-full brightness-80 ${
-                            flashBidsAsk ? "bg-red-300" : "bg-red"
-                          }`}
-                          style={{
-                            width: calculateCumulativeWidth(
-                              cumulativeBidSize,
-                              totalBidSize
-                            ),
-                            transition: "width 0.3s ease-in-out",
-                          }}
-                        ></div>
-                      </div>
+                    <div className="absolute opacity-20 w-full h-full flex justify-start">
+                      <div
+                        className="bg-positive-green brightness-100 h-full"
+                        style={{
+                          width: calculateCumulativeWidth(
+                            cumulativeBidSize,
+                            totalBidSize
+                          ),
+                        }}
+                      ></div>
                     </div>
                   </div>
-                );
-              })}
-            </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Footer with controls */}
+      <div className="flex items-center justify-between px-3 py-2 text-text-secondary">
+        <div className="flex items-center gap-2">
+          <span className="flex items-center justify-center cursor-pointer">
+            <span
+              role="img"
+              aria-hidden="true"
+              style={{
+                color: "currentcolor",
+                width: "24px",
+                height: "24px",
+                display: "inline-flex",
+                fontSize: "inherit",
+              }}
+            >
+              <OrderbookIcon />
+            </span>
+          </span>
+        </div>
+        <div className="outline-none focus:outline-none flex ml-3 text-xs font-display">
+          <div>Spread: {spreadPercentage.toFixed(2)}%</div>
+        </div>
+        <div className="inline-flex items-center mr-1 text-xs font-display text-darkBlue-30">
+          <div
+            className="rounded px-1 relative"
+            aria-expanded="false"
+            aria-haspopup="dialog"
+          >
+            <button className="disabled:cursor-not-allowed disabled:bg-button-disabled disabled:hover:bg-button-disabled disabled:text-text-disabled font-display justify-center transition-all text-sm py-[4px] px-[8px] bg-button-secondary-bg hover:bg-button-secondary-bg-hover flex items-center gap-1 text-text-secondary rounded-sm space-x-0 border-none h-auto">
+              <span className="font-[300] text-[13px] leading-[16px]">
+                $0.0001
+              </span>
+              <span
+                role="img"
+                aria-hidden="true"
+                className="rotate-180 h-5 w-5 transition-all"
+                style={{
+                  color: "currentcolor",
+                  width: "16px",
+                  height: "16px",
+                  display: "inline-flex",
+                  fontSize: "inherit",
+                }}
+              >
+                <ChevronIcon />
+              </span>
+            </button>
           </div>
         </div>
       </div>

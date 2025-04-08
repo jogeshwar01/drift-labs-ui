@@ -67,49 +67,6 @@ function MarketStats() {
           </div>
         </MarketStatItem>
 
-        {/* Funding Rate */}
-        <MarketStatItem label="Predicted / 24h Funding Rate">
-          <div
-            className="flex-col hidden xs:flex"
-            style={{ minWidth: "10rem", maxWidth: "12rem" }}
-          >
-            <span className="cursor-pointer">
-              <div className="flex space-x-2">
-                <div className="flex w-full space-x-1">
-                  <span className="font-[300] text-[13px] leading-[16px] inline-flex overflow-hidden font-numeral text-text-default">
-                    <span>
-                      <span className="flex items-center text-text-default">
-                        <span>
-                          {ticker?.oneHrFundingRate || "-0.00115"}% /{" "}
-                          {(
-                            parseFloat(ticker?.oneHrFundingRate || "-0.00115") *
-                            24
-                          ).toFixed(5)}
-                          %
-                        </span>
-                        <span
-                          role="img"
-                          aria-hidden="true"
-                          className="ml-1 mb-0.5"
-                          style={{
-                            color: "var(--purple-40)",
-                            width: "14px",
-                            height: "14px",
-                            display: "inline-flex",
-                            fontSize: "inherit",
-                          }}
-                        >
-                          <ExternalLinkIcon />
-                        </span>
-                      </span>
-                    </span>
-                  </span>
-                </div>
-              </div>
-            </span>
-          </div>
-        </MarketStatItem>
-
         {/* Open Interest */}
         <MarketStatItem label="Open Interest">
           <div className="flex items-center justify-start space-x-1 text-text-default shrink-0">

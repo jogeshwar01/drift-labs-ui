@@ -9,7 +9,6 @@ import { DepthData } from "../../utils/ws_types";
 
 export const Depth = ({ market }: { market: string }) => {
   const [activeTab, setActiveTab] = useState("orderbook"); // 'orderbook' or 'recentTrades'
-  const [valueSymbol, setValueSymbol] = useState(market?.split("-")[0]);
   const { setTrades, setAsks, setBids, setTotalAskSize, setTotalBidSize } =
     useContext(TradesContext);
 
@@ -88,73 +87,52 @@ export const Depth = ({ market }: { market: string }) => {
     };
   }, [market, setAsks, setBids, setTotalAskSize, setTotalBidSize, setTrades]);
 
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setValueSymbol(e.target.value);
-  };
-
   return (
-    <div className="flex w-full max-w-[300px] flex-col border-l border-border">
-      <div className="flex flex-col">
+    <div className="h-full min-h-[450px] w-full bg-container-bg border-container-border rounded border overflow-hidden flex">
+      <div className="flex flex-col w-full">
         {/* Tabs Section */}
         <div className="relative">
-          <div className="flex border-b border-border">
+          <div className="flex">
             <div
               onClick={() => setActiveTab("orderbook")}
-              className={`py-2 px-3 flex items-center relative hover:cursor-pointer hover:bg-container-bg-hover justify-center leading-[16px] flex-1 ${
+              className={`py-2 px-3 flex items-center relative hover:cursor-pointer ${
                 activeTab === "orderbook"
                   ? "text-text-emphasis bg-container-bg-selected"
                   : "text-text-label"
-              }`}
+              } justify-center leading-[14px] flex-1 hover:bg-container-bg-hover`}
             >
-              <span
-                className={`flex items-center justify-center overflow-hidden whitespace-nowrap px-8 py-1 font-mono text-sm font-normal uppercase transition-all focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none" ${
-                  activeTab === "orderbook" &&
-                  "[text-shadow:_0_0_30px_rgb(255,90,68)] border-primary text-primary"
-                }`}
-              >
-                DEPTH
+              <span className="flex items-center justify-center text-md">
+                Orderbook
               </span>
               {activeTab === "orderbook" && (
-                <div className="absolute left-0 bottom-0 w-full z-10 h-[1px] bg-primary"></div>
+                <div className="absolute left-0 bottom-0 w-full z-10 h-[1px] bg-[image:var(--color-primary-gradient)]"></div>
               )}
             </div>
 
             <div
               onClick={() => setActiveTab("recentTrades")}
-              className={`py-2 px-3 flex items-center relative hover:cursor-pointer hover:bg-container-bg-hover justify-center leading-[16px] flex-1 ${
+              className={`py-1 px-2 flex items-center relative hover:cursor-pointer ${
                 activeTab === "recentTrades"
                   ? "text-text-emphasis bg-container-bg-selected"
                   : "text-text-label"
-              }`}
+              } justify-center leading-[14px] flex-1 hover:bg-container-bg-hover`}
             >
-              <span
-                className={`flex items-center justify-center overflow-hidden whitespace-nowrap px-8 py-1 font-mono text-sm font-normal uppercase transition-all focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none" ${
-                  activeTab === "recentTrades" &&
-                  "[text-shadow:_0_0_30px_rgb(255,90,68)] border-primary text-primary"
-                }`}
-              >
-                TRADES
+              <span className="flex items-center justify-center text-md">
+                Recent Trades
               </span>
               {activeTab === "recentTrades" && (
-                <div className="absolute left-0 bottom-0 w-full z-10 h-[1px] bg-primary"></div>
+                <div className="absolute left-0 bottom-0 w-full z-10 h-[1px] bg-[image:var(--color-primary-gradient)]"></div>
               )}
             </div>
-            <div className="flex items-center justify-center mr-2 focus:outline-none">
-              <select
-                className="bg-background text-sm focus:outline-none"
-                value={valueSymbol}
-                onChange={handleSelectChange}
-              >
-                <option
-                  className="hover:bg-vestgrey-900 focus:bg-vestgrey-900"
-                  value={market?.split("-")[0]}
-                >
-                  {market?.split("-")[0]}
-                </option>
-                <option value="USDC">USDC</option>
-              </select>
-            </div>
           </div>
+
+          <div
+            className="w-full absolute inset-x-0 bottom-0 h-[1px] z-0"
+            style={{
+              background:
+                "linear-gradient(to left, rgba(0,0,0,0), var(--container-border))",
+            }}
+          ></div>
         </div>
 
         {/* Custom style for WebKit-based browsers to hide scrollbar */}
@@ -165,11 +143,9 @@ export const Depth = ({ market }: { market: string }) => {
         `}</style>
 
         {/* Tab Content */}
-        {activeTab === "orderbook" ? (
-          <OrderBook valueSymbol={valueSymbol} />
-        ) : (
-          <RecentTrades />
-        )}
+        <div className="flex-grow">
+          {activeTab === "orderbook" ? <OrderBook /> : <RecentTrades />}
+        </div>
       </div>
     </div>
   );
