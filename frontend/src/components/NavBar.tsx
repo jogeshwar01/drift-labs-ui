@@ -57,7 +57,9 @@ function NavBar() {
               <div key={item.id} className="undefined" aria-expanded="false">
                 <div
                   id={`desktop_navigation_category_${item.id}`}
-                  className="h-full flex items-center whitespace-nowrap font-medium self-center px-2 md:px-3 py-1 hover:cursor-pointer rounded hover:brightness-125 select-none text-text-label bg-main-bg hover:bg-container-bg-selected"
+                  className={`h-full flex items-center whitespace-nowrap font-medium self-center px-2 md:px-3 py-1 hover:cursor-pointer rounded hover:brightness-125 select-none text-text-label bg-main-bg hover:bg-container-bg-selected ${
+                    item.id === "trade" ? "bg-clip-text text-transparent bg-[image:var(--color-primary-gradient)]" : ""
+                  }`}
                 >
                   <span className="flex items-center space-x-1 pointer-events-none">
                     {item.icon && (
@@ -78,7 +80,7 @@ function NavBar() {
                       </span>
                     )}
                     {item.hasDropdown && (
-                      <DropdownArrow className="rotate-180 w-3 transition-all" />
+                      <DropdownArrow className="rotate-180 w-3 transition-all bg-main-bg hover:bg-container-bg-selected" />
                     )}
                   </span>
                 </div>

@@ -4,7 +4,7 @@ import { TradeView } from "./trade/TradeView";
 
 function TradeInterface({ market }: { market: string }) {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2">
       <div className="grid grid-cols-4 gap-2">
         <div className="col-span-3">
           <TradeView market={market as string} />

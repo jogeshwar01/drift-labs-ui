@@ -88,7 +88,7 @@ export const Depth = ({ market }: { market: string }) => {
   }, [market, setAsks, setBids, setTotalAskSize, setTotalBidSize, setTrades]);
 
   return (
-    <div className="h-full min-h-[450px] w-full bg-container-bg border-container-border rounded border overflow-hidden flex">
+    <div className="h-full min-h-[550px] w-full bg-container-bg border-container-border rounded border overflow-hidden flex">
       <div className="flex flex-col w-full">
         {/* Tabs Section */}
         <div className="relative">
