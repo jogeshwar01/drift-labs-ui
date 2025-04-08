@@ -1,24 +1,24 @@
-# Vest Exchange
+# Drift Labs UI
 
-Vest Exchange is a highly capital-efficient perpetual futures exchange that employs zero-knowledge proofs to ensure fair pricing for traders and liquidity providers.
+Drift Protocol is the largest open-sourced perpetual futures exchange built on Solana, the fastest L1 blockchain
 
-This repository is a frontend clone of the [Vest Exchange](https://trade.vest.exchange/) platform, designed to replicate its user interface and functionality. The backend is a proxy to the Vest Exchange backend, while the websocket communication is handled via Vest's WebSocket API.
+This repository is a frontend clone of the [Drift Labs](https://app.drift.trade/) platform, designed to replicate its user interface and functionality. The backend is a proxy to another Exchange backend, while the websocket communication is handled via WebSocket API.
 
-For further details, refer to the [Vest API documentation](https://docs.vest.exchange/getting-started/vest-api#get-klines).
+For further details, refer to the [Drift Labs documentation](https://docs.drift.trade/).
 
-> **Note:** This project is for frontend design and learning purposes only. It makes read-only API calls to the Exchange backend, and no actual trading occurs here. The Vest Exchange platform holds the copyright to all associated assets and functionality.
+> **Note:** This project is for frontend design and learning purposes only. It makes read-only API calls to the Exchange backend, and no actual trading occurs here. The Drift Labs platform holds the copyright to all associated assets and functionality.
 
 ## User Interface
 
-### Cloned Vest Design
+### Cloned Drift Design
 
-![Cloned Vest](images/vest.png)
+![Cloned Drift](images/drift.png)
 
-### Actual Vest Design
+### Actual Drift Design
 
 Note: Some differences may exist due to the use of paid TradingView charts in the original design.
 
-![Real Vest](images/vest-real.png)
+![Real Drift](images/drift-real.png)
 
 ## API
 
@@ -39,19 +39,17 @@ The WebSocket responses are Brotli compressed, and the data is decompressed befo
 
 ## Architecture
 
-1. The frontend replicates the Vest Exchange UI design.
+1. The frontend replicates the Drift Labs UI design.
 2. The candlestick chart is rendered for markets, utilizing both REST and WebSocket APIs to fetch and stream candlestick data in real time.
 
 3. **Other Features:**
 
    - A dropdown menu allows users to select different markets.
 
-     ![Vest Dropdown](images/vest-dropdown.png)
+     ![Drift Dropdown](images/drift-dropdown.png)
 
-   - Animations for successful trades, including confetti and sound effects upon clicking “Place Order.”
-     ![Vest Confetti](images/vest-confetti.png)
    - Integration with the Solana wallet adapter for the `Connect Wallet` feature.
-     ![Vest Wallet Adapter](images/vest-wallet-adaptor.png)
+     ![Drift Wallet Adapter](images/drift-wallet-adaptor.png)
 
    - Time interval switching for the candlestick chart.
 
