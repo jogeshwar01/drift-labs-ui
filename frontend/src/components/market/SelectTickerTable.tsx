@@ -29,7 +29,7 @@ function SelectTickerTable({
     .sort((a, b) => a.symbol.localeCompare(b.symbol));
 
   return (
-    <div className="absolute left-0 mt-14 z-100 h-full max-h-[400px] w-[800px] overflow-hidden bg-vestgrey-900 border border-border text-xs">
+    <div className="absolute left-0 ml-4 mt-112 z-100 h-full max-h-[400px] w-[800px] overflow-hidden bg-vestgrey-900 border border-border text-xs">
       <div className="flex justify-center items-center gap-1 h-[50px]">
         <img src="/common/search.svg" alt="Vest" className="ml-4 h-3" />
         <input

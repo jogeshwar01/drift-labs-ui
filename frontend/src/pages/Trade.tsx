@@ -53,9 +53,9 @@ export const Trade = () => {
           <div className="relative flex-grow h-full w-full overflow-x-hidden overflow-y-auto thin-scroll">
             <div className="w-full h-full md:absolute">
               <div className="flex flex-col w-full h-full sm:min-h-[950px] lg:min-h-[900]">
-                <div className="flex flex-col h-full sm:px-4 my-2">
+                <div className="flex flex-col h-full sm:px-4">
                   <div
-                    className="gap-2 h-full grid"
+                    className="gap-1.5 h-full grid"
                     style={{
                       gridTemplateColumns: "4fr minmax(296px, 1fr) 330px",
                       gridTemplateRows: "minmax(54px, auto) 200px 1fr",
