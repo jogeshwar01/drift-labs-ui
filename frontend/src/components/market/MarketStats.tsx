@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { TradesContext } from "../../state/TradesProvider";
 import MarketStatItem from "./MarketStatItem";
-import ExternalLinkIcon from "../icons/ExternalLinkIcon";
 import PythOracleIcon from "../icons/PythOracleIcon";
 
 function MarketStats() {

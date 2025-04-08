@@ -20,7 +20,7 @@ export const Trade = () => {
   }, [market, tickers]);
 
   if (!isTickerValid) {
-    return <Navigate to="/trade/ETH-PERP" />;
+    return <Navigate to="/trade/SOL-PERP" />;
   }
 
   return (

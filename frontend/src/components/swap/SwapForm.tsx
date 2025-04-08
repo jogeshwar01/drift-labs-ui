@@ -190,7 +190,7 @@ const SwapForm: React.FC<{ market: string }> = ({ market }) => {
                             {slippageOptions.map((option, index) => (
                               <div
                                 key={index}
-                                className={`flex-grow px-1 py-2 text-xs font-numeral ${
+                                className={`flex-grow py-2 text-xs font-numeral ${
                                   option.type === "lightning" ||
                                   option.type === "infinity"
                                     ? "text-xl"
